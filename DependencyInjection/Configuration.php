@@ -17,8 +17,10 @@ class Configuration implements ConfigurationInterface
      */
     public function getConfigTreeBuilder()
     {
-        $treeBuilder = new TreeBuilder();
-        $rootNode = $treeBuilder->root('comur_image');
+        $treeBuilder = new TreeBuilder('comur_image');
+        $rootNode = method_exists($treeBuilder, "getRootNode")
+            ? $treeBuilder->getRootNode()
+            : $treeBuilder->root('comur_image'); // BC layer for symfony/config 4.2 and older
 
         $rootNode
             ->children()
@@ -30,7 +32,7 @@ class Configuration implements ConfigurationInterface
                         ->scalarNode('gallery_dir')->defaultValue('gallery')->cannotBeEmpty()->end()
                         ->scalarNode('media_lib_thumb_size')->defaultValue(150)->cannotBeEmpty()->end()
                         ->scalarNode('gallery_thumb_size')->defaultValue(150)->cannotBeEmpty()->end()
-                        ->scalarNode('public_dir')->defaultValue('%kernel.project_dir%/public/uploads')->cannotBeEmpty()->end()
+                        ->scalarNode('public_dir')->defaultValue('%kernel.project_dir%/public')->cannotBeEmpty()->end()
                         ->scalarNode('translation_domain')->defaultValue('ComurImageBundle')->cannotBeEmpty()->end()
                     ->end()
                 ->end()
