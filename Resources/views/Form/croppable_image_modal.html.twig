@@ -1,7 +1,9 @@
 {% trans_default_domain comur_translation_domain %}
 {# trans_default_domain 'ComurImageBundle' #}
 
-{{ render(controller('Comur\\ImageBundle\\Controller\\UploadController::getTranslationCatalogue')) }}
+{# Disable translations as they were broken and I don't need them. PRs to fix are welcome. #}
+{{ include('@ComurImage/translations.html.twig', { 'messages': []}) }}
+{#{ render(controller('Comur\\ImageBundle\\Controller\\UploadController::getTranslationCatalogue')) }#}
 
 {#<script>#}
 {#    const comurImageTranslations = {{ {#}
