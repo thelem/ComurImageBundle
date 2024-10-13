@@ -1,6 +1,10 @@
 ComurImageBundle
 ================
 
+## Fork
+
+This repo is a fork of ComurImageBundle primarily to allow me to continue to use the module in a personal project, as the original repo is no longer being actively maintained. You're welcome to use this code, but as this is a side project of a side project, don't expect this fork to be too actively maintained either.
+
 ## Introduction
 
 Image upload / crop bundle for Symfony2
@@ -22,10 +26,11 @@ If this bundle helps you reduce time to develop, you can pay me a cup of coffee 
 
 |v SF|v Bundle|
 |---|---|
-|2.x|1.x|
-|3.x|2.x|
-|4.x|2.x|
-
+|2.x|comur/1.x|
+|3.x|comur/2.x|
+|4.x|comur/2.x|
+|5.x|thelem/master|
+|6.x|thelem/3|
 
 :warning: **Use 1.X releases for compatibility with bootstrap 2.x.**
 
