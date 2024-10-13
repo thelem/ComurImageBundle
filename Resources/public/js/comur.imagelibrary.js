@@ -119,10 +119,8 @@ function initializeImageManager(id, options, cb){
             );
         },
         fail: function (e, data) {
-            console.log(e, data);
-            // data.errorThrown
-            // data.textStatus;
-            // data.jqXHR;
+            $('#image_upload_widget_error').html("Failed to upload: " + data.errorThrown);
+            $('#image_upload_widget_error').parent().show();
         }
     }).prop('disabled', !$.support.fileInput)
         .parent().addClass($.support.fileInput ? undefined : 'disabled');
