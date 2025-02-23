@@ -80,9 +80,9 @@ class UploadController extends AbstractController
             'accept_file_types' => 'Filetype not allowed',
             'max_number_of_files' => 'Maximum number of files exceeded',
             'max_width' => 'Image exceeds maximum width',
-            'min_width' => "Image requires a minimum width ($config['cropConfig']['minWidth'])",
+            'min_width' => "Image requires a minimum width ($config[cropConfig][minWidth])",
             'max_height' => 'Image exceeds maximum height',
-            'min_height' => "Image requires a minimum height ($config['cropConfig']['minHeight'])",
+            'min_height' => "Image requires a minimum height ($config[cropConfig][minHeight])",
             'abort' => 'File upload aborted',
             'image_resize' => 'Failed to resize image',
         );
