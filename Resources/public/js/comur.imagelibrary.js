@@ -53,11 +53,7 @@ function initializeImageManager(id, options, cb){
         $('#image_upload_tabs li:nth-child(2)').hide();
     }
     $('#image_upload_tabs li:nth-child(3)').hide();
-    // console.log('init');
-    // console.log($('#image_upload_file'));
     var url = Routing.generate(options.uploadConfig.uploadRoute);
-    // console.log(url);
-    // console.log($('.fileinput-button'));
     //$('#image_upload_file').bind('change', function(){console.log('change')});
     $('#image_upload_file').fileupload({
         url: url,
@@ -70,10 +66,10 @@ function initializeImageManager(id, options, cb){
             var uploadErrors = [];
             var acceptFileTypes = new RegExp(`(\.|\/)(${options.uploadConfig.fileExt.replace(/\*\./g, '').split(';').join('|')})$`, 'i');
             if(data.originalFiles[0]['type'].length && !acceptFileTypes.test(data.originalFiles[0]['type'])) {
-                uploadErrors.push(comurImageTranslations['Filetype not allowed']);
+                uploadErrors.push('Filetype not allowed');
             }
             if(data.originalFiles[0]['size'] && data.originalFiles[0]['size'] > options.uploadConfig.maxFileSize * 1024 * 1024 ) {
-                uploadErrors.push(comurImageTranslations['File is too big']);
+                uploadErrors.push('File is too big');
             }
             if(uploadErrors.length > 0) {
                 $('#image_upload_widget_error').html(uploadErrors.join("<br/>"));
@@ -85,7 +81,6 @@ function initializeImageManager(id, options, cb){
             }
         },
         done: function (e, data) {
-            // console.log('uploaded');
             if(data.result['image_upload_file'][0].error){
                 $('#image_upload_widget_error').text(data.result['image_upload_file'][0].error);
                 $('#image_upload_widget_error').parent().show();
@@ -93,9 +88,6 @@ function initializeImageManager(id, options, cb){
             else{
                 $('#image_upload_widget_error').text('');
                 $('#image_upload_widget_error').parent().hide();
-                // console.log(data.result, data.result['image_upload_file']);
-                // $('#image_preview img').remove();
-                // $('#image_preview').html('<img src="/'+data.result['image_upload_file'][0].url+'" id="image_preview_image"/>');
                 $('#selected_image').val(data.result['image_upload_file'][0].name); 
                 if (options.cropConfig.disable) {
                     $('#'+id).val(data.result['image_upload_file'][0].name);
@@ -124,29 +116,19 @@ function initializeImageManager(id, options, cb){
         }
     }).prop('disabled', !$.support.fileInput)
         .parent().addClass($.support.fileInput ? undefined : 'disabled');
-    // $('#image_upload_file').bind('fileuploadadd', function (e, data) {console.log('add')});
     $('#image_crop_go_now').unbind('click');
     $('#image_crop_go_now').click(function(){ cropImage(id, options)});
-    // $('#image_crop_cancel').click(function () {
-    //     $('#selected_image').val('');
-    //     $('#image_crop_go_now').addClass('hidden');
-    //     $('#image_crop_cancel').addClass('hidden');
-    //     $('#image_upload_tabs a:first').tab('show');
-    // });
-    // $('#'+id+'_image_crop span').click(initJCrop_{{id}});
-    // $('#'+id+'_image_crop_go_cancel').click(destroyJCrop);
 }
 
 function destroyImageManager(){
     $('#image_upload_file').fileupload('destroy');
     destroyJCrop();
     $('#image_crop_go_now').unbind('click');
-    $('#image_preview').html('<p>'+comurImageTranslations['Please select or upload an image']+'</p>');
+    $('#image_preview').html('<p>Please select or upload an image</p>');
     $('#image_file_upload_progress .progress-bar').css(
       'width',
       '0%'
     );
-    // $('#image_crop_cancel').addClass('hidden');
     reinitModal();
 }
 
@@ -198,13 +180,9 @@ function initJCrop(id, options){
                 selectionWidth, 
                 selectionHeight
             ]);
-            //$('#image_crop').addClass('hidden');
             $('#image_crop_go_now').removeClass('hidden');
-            // $('#image_crop_cancel').removeClass('hidden');
             $('#image_upload_tabs a:last').tab('show');
         });
-        //$('#image_backdrop').removeClass('hidden');
-        //$('#image_preview').css({ 'position': 'relative'});
     // }
     // else{
     //     c = {x: 0, y: 0, w: 0, h: 0};
@@ -230,22 +208,16 @@ function cropImage(id, options){
             var filename = data.filename;
             var previewSrc = data.previewSrc;
             
-            // console.log('crop success');
             if (options.callback) {
                 options.callback(data);
             } else {
                 if(typeof galleries[id] != 'undefined'){
-                    // console.log('isGallery');
-                    // console.log(galleries[id]);
                     addImageToGallery(filename, id, data.galleryThumb, options);
                 }
                 else{
-                    // console.log('simple image');
                     $('#'+id).val(filename);
                     $('#image_preview_image_'+id).html('<img src="'+previewSrc+'?'+ new Date().getTime()+'" id="'+id+'_preview"/>');
-                    // console.log(options.uploadConfig.saveOriginal, $('#'+options.originalImageFieldId), options.originalImageFieldId);
                     if(options.uploadConfig.saveOriginal){
-                        // console.log('set '+$('#selected_image').val());
                         $('#'+options.originalImageFieldId).val($('#selected_image').val());
                         $('#image_preview_image_'+id+' img').css('cursor: hand; cursor: pointer;');
                         $('#image_preview_image_'+id+' img').click(function(e){
@@ -255,12 +227,10 @@ function cropImage(id, options){
                             }
                         });
                     }
-                    //$('#image_preview_image_'+id).html('<img src="/'+options.uploadConfig.webDir + '/' + $('#selected_image').val()+'?'+ new Date().getTime()+'" id="'+id+'_preview"/>');
                     $('#image_preview_'+id).removeClass('hide-disabled');
                 }
             }
 
-            
             destroyJCrop(id);
             reinitModal();
         },
@@ -274,15 +244,12 @@ function reinitModal() {
     $('#selected_image').val('');
     $('#image_preview').html('<p>Please select or upload an image</p>');
     $('#image_crop_go_now').addClass('hidden');
-    // $('#image_crop_cancel').addClass('hidden');
     $('#image_upload_tabs a:first').tab('show');
     $('#image_upload_modal').modal('hide');
 }
 
 function addImageToGallery(filename, id, thumb, options)
 {
-    // $('#'+id).val(js_array_to_php_array(galleries[id]));
-    // console.log('add #gallery_preview_'+id+' input');
     var nb = $('#gallery_preview_'+id+' input').length;
     var name = $('#gallery_preview_'+id).data('name');
     $('#gallery_preview_'+id).append('<div class="gallery-image-container" data-image="'+filename+'">' +
@@ -296,11 +263,9 @@ function addImageToGallery(filename, id, thumb, options)
 
 function removeImageFromGallery(filename, id)
 {
-    
     // ADD DELETE FILE HERE !
     $('#'+id).parent().remove();
     reorderItems(id);
-
 }
 
 function reorderItems(id)
@@ -325,7 +290,6 @@ function destroyJCrop(){
         return false;
     }
     api.destroy();
-    // $('#upload_image_crop').removeClass('hidden');
     $('#upload_image_crop_go').addClass('hidden');
 }
 
