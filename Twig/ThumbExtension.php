@@ -22,7 +22,7 @@ class ThumbExtension extends AbstractExtension implements GlobalsInterface
         $this->galleryDir = $galleryDir;
     }
 
-    public function getFilters()
+    public function getFilters(): array
     {
         return array(
             new TwigFilter('thumb', array($this, 'getThumb')),
