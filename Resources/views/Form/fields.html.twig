@@ -1,41 +1,36 @@
 {% block comur_image_widget %}
-    {% trans_default_domain comur_translation_domain %}
-    {# trans_default_domain 'ComurImageBundle' #}
-    {% apply spaceless %}
-        {# block('form_widget_simple') #}
-        {{ form_widget(form[name])}}
-        {% if options.uploadConfig.saveOriginal %}
-            {{ form_widget(form[options.uploadConfig.saveOriginal])}}
-        {% endif %}
-        {{- form_errors(form) -}}
-        <div class="field-error clearfix hidden">
-            <div id="{{form[name].vars.id}}_widget_error" class="alert alert-danger span6">
-            </div>
+    {# block('form_widget_simple') #}
+    {{ form_widget(form[name])}}
+    {% if options.uploadConfig.saveOriginal %}
+        {{ form_widget(form[options.uploadConfig.saveOriginal])}}
+    {% endif %}
+    {{- form_errors(form) -}}
+    <div class="field-error clearfix hidden">
+        <div id="{{form[name].vars.id}}_widget_error" class="alert alert-danger span6">
         </div>
-        <div class="image_preview select-image-button" id="image_preview_{{ form[name].vars.id }}" style="z-index: 1050">
-            <div class="image_edit_button">
-                <span class="btn btn-success select-image-button">
-                    <i class="fa fa-pencil"></i> {% trans %}Edit{% endtrans %}
-                </span>
-            </div>
-            <div id="image_preview_image_{{form[name].vars.id}}">
-                {% if not options.fieldImage %}
-                    {% if form[name].vars.value %}
-                        <img title="{{ options.cropConfig.minWidth }} x {{ options.cropConfig.minHeight}}" src="/{{ options.uploadConfig.webDir ~ '/' ~ form[name].vars.value }}?{{ 'now'  | date('U') }}" id="{{ form[name].vars.id }}_preview" style="{{ options.uploadConfig.saveOriginal ? 'cursor:hand; cursor: pointer' : ''}}"/>
-                    {% else %}
-                        <img title="{{ options.cropConfig.minWidth }} x {{ options.cropConfig.minHeight}}" data-src="holder.js/{{ options.cropConfig.minWidth }}x{{ options.cropConfig.minHeight}}" id="{{ form[name].vars.id }}_preview"/>
-                    {% endif %}
+    </div>
+    <div class="image_preview select-image-button" id="image_preview_{{ form[name].vars.id }}" style="z-index: 1050">
+        <div class="image_edit_button">
+            <span class="btn btn-success select-image-button">
+                <i class="fa fa-pencil"></i> Edit
+            </span>
+        </div>
+        <div id="image_preview_image_{{form[name].vars.id}}">
+            {% if not options.fieldImage %}
+                {% if form[name].vars.value %}
+                    <img title="{{ options.cropConfig.minWidth }} x {{ options.cropConfig.minHeight}}" src="/{{ options.uploadConfig.webDir ~ '/' ~ form[name].vars.value }}?{{ 'now'  | date('U') }}" id="{{ form[name].vars.id }}_preview" style="{{ options.uploadConfig.saveOriginal ? 'cursor:hand; cursor: pointer' : ''}}"/>
                 {% else %}
-                    {% if form[name].vars.value %}
-                        <img title="{{ options.cropConfig.minWidth }} x {{ options.cropConfig.minHeight}}" src="/{{ (options.uploadConfig.webDir ~ '/' ~ form[name].vars.value)|thumb(options.fieldImage.maxWidth, options.fieldImage.maxHeight) }}?{{ 'now'  | date('U') }}" id="{{ form[name].vars.id }}_preview" style="{{ options.uploadConfig.saveOriginal ? 'cursor:hand; cursor: pointer' : ''}}"/>
-                    {% else %}
-                        <img title="{{ options.cropConfig.minWidth }} x {{ options.cropConfig.minHeight}}" data-src="holder.js/{{ options.fieldImage.maxWidth }}x{{ options.fieldImage.maxHeight}}" id="{{ form[name].vars.id }}_preview"/>
-                    {% endif %}
+                    <img title="{{ options.cropConfig.minWidth }} x {{ options.cropConfig.minHeight}}" data-src="holder.js/{{ options.cropConfig.minWidth }}x{{ options.cropConfig.minHeight}}" id="{{ form[name].vars.id }}_preview"/>
                 {% endif %}
-
-            </div>
+            {% else %}
+                {% if form[name].vars.value %}
+                    <img title="{{ options.cropConfig.minWidth }} x {{ options.cropConfig.minHeight}}" src="/{{ (options.uploadConfig.webDir ~ '/' ~ form[name].vars.value)|thumb(options.fieldImage.maxWidth, options.fieldImage.maxHeight) }}?{{ 'now'  | date('U') }}" id="{{ form[name].vars.id }}_preview" style="{{ options.uploadConfig.saveOriginal ? 'cursor:hand; cursor: pointer' : ''}}"/>
+                {% else %}
+                    <img title="{{ options.cropConfig.minWidth }} x {{ options.cropConfig.minHeight}}" data-src="holder.js/{{ options.fieldImage.maxWidth }}x{{ options.fieldImage.maxHeight}}" id="{{ form[name].vars.id }}_preview"/>
+                {% endif %}
+            {% endif %}
         </div>
-    {% endapply %}
+    </div>
 
     <script>
         $(document).ready(function(){
@@ -72,46 +67,36 @@
             if(!$(this).hasClass('hide-disabled'))
                 $(this).children('.image_edit_button').addClass('hidden');
         });
-
     </script>
 {% endblock %}
 
 {% block comur_gallery_widget %}
-    {% trans_default_domain comur_translation_domain %}
-    {# trans_default_domain 'ComurImageBundle' #}
-
-    {% apply spaceless %}
-        {{- form_errors(form) -}}
-        <div class="field-error clearfix hidden">
-            <div id="{{form[name].vars.id}}_widget_error" class="alert alert-danger span6">
-            </div>
+    {{- form_errors(form) -}}
+    <div class="field-error clearfix hidden">
+        <div id="{{form[name].vars.id}}_widget_error" class="alert alert-danger span6">
         </div>
-        <div class="card">
-            <div id="gallery_preview_{{form[name].vars.id}}" class="card-body well" data-name="{{form[name].vars.full_name}}">
-
-                {% for image in form[name] %}
-                    <div class="gallery-image-container" data-image="{{ image.vars.value }}">
-                        <span class="gallery-image-helper"></span>
-                        {{ form_widget(image) }}
-                        <span class="remove-image"><i class="fa fa-times" data-delete="image"></i></span>
-                        <img src="/{{ (options.uploadConfig.webDir ~ '/' ~ image.vars.value)|thumb(options.galleryThumbSize, options.galleryThumbSize) }}?{{ 'now'  | date('U') }}"/>
-                    </div>
-                {% endfor %}
-            </div>
-            <div class="card-footer">
-                <div class="image_add_button" id="image_add_button_{{form[name].vars.id}}">
-                    <span class="btn btn-sm btn-success add-image-button">
-                        <i class="fa fa-image"></i> {% trans %}Add image{% endtrans %}
-                    </span>
+    </div>
+    <div class="card">
+        <div id="gallery_preview_{{form[name].vars.id}}" class="card-body well" data-name="{{form[name].vars.full_name}}">
+            {% for image in form[name] %}
+                <div class="gallery-image-container" data-image="{{ image.vars.value }}">
+                    <span class="gallery-image-helper"></span>
+                    {{ form_widget(image) }}
+                    <span class="remove-image"><i class="fa fa-times" data-delete="image"></i></span>
+                    <img src="/{{ (options.uploadConfig.webDir ~ '/' ~ image.vars.value)|thumb(options.galleryThumbSize, options.galleryThumbSize) }}?{{ 'now'  | date('U') }}"/>
                 </div>
+            {% endfor %}
+        </div>
+        <div class="card-footer">
+            <div class="image_add_button" id="image_add_button_{{form[name].vars.id}}">
+                <span class="btn btn-sm btn-success add-image-button">
+                    <i class="fa fa-image"></i> Add image
+                </span>
             </div>
         </div>
-
-
-    {% endapply %}
+    </div>
 
     <script>
-
         $(document).ready(function(){
             rebindGalleryRemove();
             galleries['{{form[name].vars.id}}'] = true;
@@ -130,6 +115,5 @@
             });
             $( "#gallery_preview_{{form[name].vars.id}}" ).disableSelection();
         });
-
     </script>
 {% endblock %}
