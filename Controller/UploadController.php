@@ -203,7 +203,7 @@ class UploadController extends AbstractController
         return new Response(json_encode(array('success' => true,
                                               'filename'=>$croppedImageDir.'/'.$imageName,
                                               'previewSrc' => $previewSrc,
-                                              'galleryThumb' =>  $croppedImageDir. '/' . $thumbsDir . '/'.$gThumbSize.'x'.$gThumbSize.'-' .$imageName)));
+                                              'galleryThumb' =>  $croppedImageDir. '/' . $thumbsDir . '/'.$galleryThumbSize.'x'.$galleryThumbSize.'-' .$imageName)));
     }
 
     /**
