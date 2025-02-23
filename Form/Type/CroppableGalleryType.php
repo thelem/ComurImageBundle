@@ -28,7 +28,7 @@ class CroppableGalleryType extends CroppableImageType
     /**
      * {@inheritdoc}
      */
-    public function buildForm(FormBuilderInterface $builder, array $options)
+    public function buildForm(FormBuilderInterface $builder, array $options): view
     {
 
         $builder->add($builder->getName(), CollectionType::class, array(
@@ -57,7 +57,7 @@ class CroppableGalleryType extends CroppableImageType
     /**
      * {@inheritdoc}
      */
-    public function buildView(FormView $view, FormInterface $form, array $options)
+    public function buildView(FormView $view, FormInterface $form, array $options): void
     {
         $uploadConfig = $options['uploadConfig'];
         $cropConfig = $options['cropConfig'];
