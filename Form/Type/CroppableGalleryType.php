@@ -20,7 +20,7 @@ class CroppableGalleryType extends CroppableImageType
     protected $isGallery = true;
     protected $galleryThumbSize = null;
 
-    public function getBlockPrefix()
+    public function getBlockPrefix(): string
     {
         return 'comur_gallery';
     }
