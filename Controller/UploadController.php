@@ -8,7 +8,6 @@ use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\HttpFoundation\File\UploadedFile;
 use Symfony\Component\HttpFoundation\StreamedResponse;
-use Symfony\Contracts\Translation\TranslatorInterface;
 
 use Symfony\Component\Finder\Finder;
 
@@ -16,13 +15,6 @@ use Comur\ImageBundle\Handler\UploadHandler;
 
 class UploadController extends AbstractController
 {
-    private $translator;
-
-    public function __construct(TranslatorInterface $translator)
-    {
-        $this->translator = $translator;
-    }
-
     /**
      * Save uploaded image according to comur_image field configuration
      *
@@ -87,28 +79,26 @@ class UploadController extends AbstractController
                 )
             )
         );
-
-        $transDomain = $this->container->getParameter('comur_image.translation_domain');
-
+        
         $errorMessages = array(
-            1 => $this->translator->trans('The uploaded file exceeds the upload_max_filesize directive in php.ini', array(), $transDomain),
-            2 => $this->translator->trans('The uploaded file exceeds the MAX_FILE_SIZE directive that was specified in the HTML form', array(), $transDomain),
-            3 => $this->translator->trans('The uploaded file was only partially uploaded', array(), $transDomain),
-            4 => $this->translator->trans('No file was uploaded', array(), $transDomain),
-            6 => $this->translator->trans('Missing a temporary folder', array(), $transDomain),
-            7 => $this->translator->trans('Failed to write file to disk', array(), $transDomain),
-            8 => $this->translator->trans('A PHP extension stopped the file upload', array(), $transDomain),
-            'post_max_size' => $this->translator->trans('The uploaded file exceeds the post_max_size directive in php.ini', array(), $transDomain),
-            'max_file_size' => $this->translator->trans('File is too big', array(), $transDomain),
-            'min_file_size' => $this->translator->trans('File is too small', array(), $transDomain),
-            'accept_file_types' => $this->translator->trans('Filetype not allowed', array(), $transDomain),
-            'max_number_of_files' => $this->translator->trans('Maximum number of files exceeded', array(), $transDomain),
-            'max_width' => $this->translator->trans('Image exceeds maximum width', array(), $transDomain),
-            'min_width' => $this->translator->trans('Image requires a minimum width (%min%)', array('%min%' => $config['cropConfig']['minWidth']), $transDomain),
-            'max_height' => $this->translator->trans('Image exceeds maximum height', array(), $transDomain),
-            'min_height' => $this->translator->trans('Image requires a minimum height (%min%)', array('%min%' => $config['cropConfig']['minHeight']), $transDomain),
-            'abort' => $this->translator->trans('File upload aborted', array(), $transDomain),
-            'image_resize' => $this->translator->trans('Failed to resize image', array(), $transDomain),
+            1 => 'The uploaded file exceeds the upload_max_filesize directive in php.ini',
+            2 => 'The uploaded file exceeds the MAX_FILE_SIZE directive that was specified in the HTML form',
+            3 => 'The uploaded file was only partially uploaded',
+            4 => 'No file was uploaded',
+            6 => 'Missing a temporary folder',
+            7 => 'Failed to write file to disk',
+            8 => 'A PHP extension stopped the file upload',
+            'post_max_size' => 'The uploaded file exceeds the post_max_size directive in php.ini',
+            'max_file_size' => 'File is too big',
+            'min_file_size' => 'File is too small',
+            'accept_file_types' => 'Filetype not allowed',
+            'max_number_of_files' => 'Maximum number of files exceeded',
+            'max_width' => 'Image exceeds maximum width',
+            'min_width' => "Image requires a minimum width ($config['cropConfig']['minWidth']))",
+            'max_height' => 'Image exceeds maximum height',
+            'min_height' => "Image requires a minimum height ($config['cropConfig']['minHeight'])',
+            'abort' => 'File upload aborted',
+            'image_resize' => 'Failed to resize image',
         );
 
         $response->setCallback(function () use($handlerConfig, $errorMessages) {
@@ -429,20 +419,5 @@ class UploadController extends AbstractController
         }
 
         $writeFunc($dstR,$destSrc,$imageQuality);
-    }
-
-    /**
-     * returns translation catalogue to add it for javascript translation support
-     * @param Request $request
-     * @return Response
-     */
-    public function getTranslationCatalogue(Request $request) {
-        $transDomain = $this->container->getParameter('comur_image.translation_domain');
-        $catalogue = $this->translator->getCatalogue($request->getLocale());
-        $messages = $catalogue->all();
-
-        return $this->render('@ComurImage/translations.html.twig', array(
-            'messages' => $messages[$transDomain]
-        ));
     }
 }
