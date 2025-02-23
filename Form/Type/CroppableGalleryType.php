@@ -28,7 +28,7 @@ class CroppableGalleryType extends CroppableImageType
     /**
      * {@inheritdoc}
      */
-    public function buildForm(FormBuilderInterface $builder, array $options): view
+    public function buildForm(FormBuilderInterface $builder, array $options): void
     {
 
         $builder->add($builder->getName(), CollectionType::class, array(
