@@ -22,3 +22,10 @@ services:
         autowire: true
         resource: '../../Controller'
         tags: ['controller.service_arguments', 'container.service_subscriber']
+        bind:
+            $thumbsDir: '%comur_image.thumbs_dir%'
+            $publicDir: '%comur_image.public_dir%'
+            $croppedImageDir: '%comur_image.cropped_image_dir%'
+            $galleryDir: '%comur_image.gallery_dir%'
+            $galleryThumbSize: '%comur_image.gallery_thumb_size%'
+            $mediaLibThumbSize: '%comur_image.media_lib_thumb_size%'
