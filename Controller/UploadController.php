@@ -20,30 +20,18 @@ class UploadController extends AbstractController
      *
      * @param Request $request
      */
-    public function uploadImageAction(Request $request
-        /*, $uploadUrl, $paramName, $webDir, $minWidth=1, $minHeight=1*/
-    ){
+    public function uploadImageAction(Request $request){
         $config = json_decode($request->request->get('config'),true);
 
         $thumbsDir = $this->container->getParameter('comur_image.thumbs_dir');
         $thumbSize = $this->container->getParameter('comur_image.media_lib_thumb_size');
-        if (isset($config['uploadConfig']['uploadDir'])) {
-            $uploadUrl = $this->container->getParameter('comur_image.public_dir') . '/' . $config['uploadConfig']['uploadDir'];
-        } else {
-            // For backward compatibility
-            /**
-             * @deprecated since comur/image-bundle 2.0.3 due to security issue, to be removed in 2.1. Use uploadDir instead.
-             */
-            $uploadUrl = $config['uploadConfig']['uploadUrl'];
-        }
+        $uploadUrl = $this->container->getParameter('comur_image.public_dir') . '/' . $config['uploadConfig']['uploadDir'];
         $uploadUrl = substr($uploadUrl, -strlen('/')) === '/' ? $uploadUrl : $uploadUrl . '/';
 
         // We must use a streamed response because the UploadHandler echoes directly
         $response = new StreamedResponse();
 
-//        $webDir = $config['uploadConfig']['webDir'];
-//        $webDir = substr($webDir, -strlen('/')) === '/' ? $webDir : $webDir . '/';
-        if($config['uploadConfig']['generateFilename']) {
+        if ($config['uploadConfig']['generateFilename']) {
             $filename = sha1(uniqid(mt_rand(), true));
         }
         else {
@@ -96,7 +84,7 @@ class UploadController extends AbstractController
             'max_width' => 'Image exceeds maximum width',
             'min_width' => "Image requires a minimum width ($config['cropConfig']['minWidth']))",
             'max_height' => 'Image exceeds maximum height',
-            'min_height' => "Image requires a minimum height ($config['cropConfig']['minHeight'])',
+            'min_height' => "Image requires a minimum height ($config['cropConfig']['minHeight'])",
             'abort' => 'File upload aborted',
             'image_resize' => 'Failed to resize image',
         );
@@ -113,12 +101,10 @@ class UploadController extends AbstractController
      *
      * @param Request $request
      */
-    public function cropImageAction(Request $request
-        /*, $uploadUrl, $webDir, $imageName, $x, $y, $w, $h, $tarW, $tarH*/
-    ){
+    public function cropImageAction(Request $request){
         $config = json_decode($request->request->get('config'),true);
         $params = $request->request->all();
-        // var_dump($params);exit;
+        
         $x = (int) round($params['x']);
         $y = (int) round($params['y']);
         $w = (int) round($params['w']);
@@ -141,30 +127,12 @@ class UploadController extends AbstractController
         //End issue 36
 
         $forceResize = $config['cropConfig']['forceResize'];
-        // $disableCrop = $config['cropConfig']['disableCrop'];
 
-        if (isset($config['uploadConfig']['uploadDir'])) {
-            $uploadUrl = $this->container->getParameter('comur_image.public_dir') . '/' . urldecode($config['uploadConfig']['uploadDir']);
-        } else {
-            // For backward compatibility
-            /**
-             * @deprecated since comur/image-bundle 2.0.3 due to security issue, to be removed in 2.1. Use uploadDir instead.
-             */
-            $uploadUrl = urldecode($config['uploadConfig']['uploadUrl']);
-        }
-
+        $uploadUrl = $this->container->getParameter('comur_image.public_dir') . '/' . urldecode($config['uploadConfig']['uploadDir']);
 
         $imageName = $params['imageName'];
 
         $src = $uploadUrl.'/'.$imageName;
-
-        // if($disableCrop){
-        //     list($w, $h) = getimagesize($src);
-        //     if($config['cropConfig']['aspectRatio'])
-        //     {
-        //         list($w, $h) = $this->getMaxCropValues($w, $h, $tarW, $tarH);
-        //     }
-        // }
 
         if (!is_dir($uploadUrl.'/'.$this->container->getParameter('comur_image.cropped_image_dir').'/')) {
             mkdir($uploadUrl.'/'.$this->container->getParameter('comur_image.cropped_image_dir').'/', 0755, true);
@@ -175,23 +143,18 @@ class UploadController extends AbstractController
             $imageName = sha1(uniqid(mt_rand(), true)).'.'.$ext;
         }
         $destSrc = $uploadUrl.'/'.$this->container->getParameter('comur_image.cropped_image_dir').'/'.$imageName;
-        //$writeFunc($dstR,$src,$imageQuality);
 
         $destW = $w;
         $destH = $h;
 
-        if($forceResize){
-
+        if ($forceResize){
             $destW = $tarW;
             $destH = $tarH;
-
-            if(round($w/$h, 2) != round($tarW/$tarH, 2)){
-                // var_dump($destW, $destH, $w, $h, $this->getMaxResizeValues($w, $h, $tarW, $tarH));exit;
+            if (round($w/$h, 2) != round($tarW/$tarH, 2)){
                 // $destW = $w;
                 // $destH = $h;
                 list($destW, $destH) = $this->getMinResizeValues($w, $h, $tarW, $tarH);
             }
-
         }
 
         $this->resizeCropImage($destSrc,$src,0,0,$x,$y,$destW,$destH,$w,$h);
@@ -201,43 +164,40 @@ class UploadController extends AbstractController
         $galleryDir = $this->container->getParameter('comur_image.gallery_dir');
         $gThumbSize = $this->container->getParameter('comur_image.gallery_thumb_size');
 
-        if($isGallery)
+        if ($isGallery)
         {
-            if(!isset($config['cropConfig']['thumbs']) || !($thumbs = $config['cropConfig']['thumbs']) || !count($thumbs))
+            if (!isset($config['cropConfig']['thumbs']) || !($thumbs = $config['cropConfig']['thumbs']) || !count($thumbs))
             {
                 $config['cropConfig']['thumbs'] = array();
             }
             $config['cropConfig']['thumbs'][] = array('maxWidth' => $gThumbSize, 'maxHeight' => $gThumbSize, 'forGallery' => true);
         }
 
-
         //Create thumbs if asked
         $previewSrc = '/'.$config['uploadConfig']['webDir'] . '/' . $this->container->getParameter('comur_image.cropped_image_dir') . '/'. $imageName;
-        if(isset($config['cropConfig']['thumbs']) && ($thumbs = $config['cropConfig']['thumbs']) && count($thumbs))
+        if (isset($config['cropConfig']['thumbs']) && ($thumbs = $config['cropConfig']['thumbs']) && count($thumbs))
         {
             $thumbDir = $uploadUrl.'/'.$this->container->getParameter('comur_image.cropped_image_dir') . '/' . $this->container->getParameter('comur_image.thumbs_dir').'/';
-            if(!is_dir($thumbDir))
+            if (!is_dir($thumbDir))
             {
                 mkdir($thumbDir);
             }
 
-
-
-            foreach($thumbs as $thumb){
+            foreach ($thumbs as $thumb){
                 $maxW = $thumb['maxWidth'];
                 $maxH = $thumb['maxHeight'];
 
-                if(!isset($thumb['forGallery']) && $maxW == $gThumbSize && $maxH == $gThumbSize){
+                if (!isset($thumb['forGallery']) && $maxW == $gThumbSize && $maxH == $gThumbSize){
                     $galleryThumbOk = true;
                 }
-                if(isset($thumb['forGallery']) && $galleryThumbOk) continue;
+                if (isset($thumb['forGallery']) && $galleryThumbOk) continue;
 
                 list($w, $h) = $this->getMaxResizeValues($destW, $destH, $maxW, $maxH);
 
                 $thumbName = $maxW.'x'.$maxH.'-'.$imageName;
                 $thumbSrc = $thumbDir . $thumbName;
                 $this->resizeCropImage($thumbSrc, $destSrc, 0, 0, 0, 0, $w, $h, $destW, $destH);
-                if(isset($thumb['useAsFieldImage']) && $thumb['useAsFieldImage']){
+                if (isset($thumb['useAsFieldImage']) && $thumb['useAsFieldImage']){
                     $previewSrc = '/'.$config['uploadConfig']['webDir'] . '/' . $this->container->getParameter('comur_image.cropped_image_dir') . '/'. $this->container->getParameter('comur_image.thumbs_dir'). '/' . $thumbName;
                 }
             }
@@ -323,7 +283,6 @@ class UploadController extends AbstractController
             $files[] = $file->getFilename();
         }
         $result['files'] = $files;
-        // var_dump(json_encode($result));exit;
 
         return new Response(json_encode($result));
     }
