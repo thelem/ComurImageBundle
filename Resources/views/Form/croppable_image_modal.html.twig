@@ -1,18 +1,3 @@
-{% trans_default_domain comur_translation_domain %}
-{# trans_default_domain 'ComurImageBundle' #}
-
-{# Disable translations as they were broken and I don't need them. PRs to fix are welcome. #}
-{{ include('@ComurImage/translations.html.twig', { 'messages': []}) }}
-{#{ render(controller('Comur\\ImageBundle\\Controller\\UploadController::getTranslationCatalogue')) }#}
-
-{#<script>#}
-{#    const comurImageTranslations = {{ {#}
-{#        'Please select or upload an image': 'Please select or upload an image'|trans,#}
-{#        'File is too big': 'File is too big'|trans,#}
-{#        'Filetype not allowed': 'Filetype not allowed'|trans#}
-{#    }|json_encode|raw }};#}
-{#</script>#}
-
 {% set bv = bootstrap_version is defined ? bootstrap_version : (include_bootstrap is not defined or include_bootstrap ? 4 : 3) %}
 
 {% block comur_image_scripts %}
@@ -22,7 +7,6 @@
 {% endif %}
 <!-- The jQuery UI widget factory, can be omitted if jQuery UI is already included -->
 <script src="{{ asset('bundles/comurimage/js/jquery-ui.min.js') }}"></script>
-{#<script src="{{ asset('bundles/comurimage/vendor/blueimp-file-upload/js/vendor/jquery.ui.widget.js') }}"></script>#}
 <!-- The Iframe Transport is required for browsers without support for XHR file uploads -->
 <script src="{{ asset('bundles/comurimage/vendor/blueimp-file-upload/js/jquery.iframe-transport.js') }}"></script>
 <script src="{{ asset('bundles/comurimage/vendor/blueimp-file-upload/js/jquery.fileupload.js') }}"></script>
@@ -57,21 +41,21 @@
         <div class="modal-content">
             <div class="modal-header">
                 {% if bv == 4 %}
-                    <h5 class="modal-title">{% trans %}Insert Image{% endtrans %}</h5>
+                    <h5 class="modal-title">Insert Image</h5>
                 {% endif %}
                 <button type="button" class="close" data-dismiss="modal" aria-hidden="true">×</button>
                 {% if bv == 3 %}
-                    <h3 class="modal-title">{% trans %}Insert Image{% endtrans %}</h3>
+                    <h3 class="modal-title">Insert Image</h3>
                 {% endif %}
             </div>
             <div class="modal-body">
                 <div id="cropping-loader" class="text-center loader" style="display: none"><i class="fa fa-spinner fa-pulse fa-5x"></i></div>
                 <ul class="nav nav-tabs" id="image_upload_tabs">
                     <li class="active nav-item">
-                        <a class="nav-link active" href="#upload-image" data-toggle="tab">{% trans %}Upload Image{% endtrans %}</a>
+                        <a class="nav-link active" href="#upload-image" data-toggle="tab">Upload Image</a>
                     </li>
-                    <li class="nav-item"><a class="nav-link" href="#select-existing" data-toggle="tab">{% trans %}Select Existing{% endtrans %}</a></li>
-                    <li class="nav-item"><a class="nav-link" href="#crop-and-use" data-toggle="tab">{% trans %}Crop and Use{% endtrans %}</a></li>
+                    <li class="nav-item"><a class="nav-link" href="#select-existing" data-toggle="tab">Select Existing</a></li>
+                    <li class="nav-item"><a class="nav-link" href="#crop-and-use" data-toggle="tab">Crop and Use</a></li>
                 </ul>
                 <div class="tab-content">
                     <!-- UPLOAD IMAGE -->
@@ -82,13 +66,13 @@
                         </div>
                         <div id="image_upload_drop_zone" class="image_upload_drop_zone">
                             <p><i class="fa fa-image fa-3x"></i></p>
-                            <p>{% trans %}Drop your file here{% endtrans %}</p>
+                            <p>Drop your file here</p>
                         </div>
-                        <p>{% trans %}or{% endtrans %}</p>
+                        <p>or</p>
                         <div id="image_upload_file_container">
                             <span class="btn btn-info fileinput-button">
                                 <i class="fa fa-upload"></i>&nbsp;
-                                <span> {% trans %}Select a file...{% endtrans %}</span>
+                                <span>Select a file...</span>
                                 <input id="image_upload_file" type="file" name="image_upload_file">
                             </span>
                         </div>
@@ -107,25 +91,21 @@
                     </div>
                     <!-- CROP IMAGE -->
                     <div class="tab-pane" id="crop-and-use">
-                        <h4 class="text-info text-center"><i class="fa fa-info-circle"></i>&nbsp;{% trans %}Please adjust selection to your image{% endtrans %}</h4>
+                        <h4 class="text-info text-center"><i class="fa fa-info-circle"></i>&nbsp;Please adjust selection to your image</h4>
                         <div class="image_preview" id="image_preview" style="z-index: 1050">
-                            <p class="text-danger text-center">{% trans %}Please select or upload an image{% endtrans %}</p>
+                            <p class="text-danger text-center">Please select or upload an image</p>
                         </div>
                     </div>
                 </div>
                 <div class="modal-footer">
                     <button class="btn btn-danger" data-dismiss="modal">
                         <i class="fa fa-ban"></i>&nbsp;
-                        {% trans %}Close{% endtrans %}
+                        Close
                     </button>
                     <span class="btn btn-success hidden" id="image_crop_go_now">
                         <i class="fa fa-cut"></i>&nbsp;
-                        {% trans %}Crop & Use !{% endtrans %}
+                        Crop & Use !
                     </span>
-{#                    <span class="btn btn-danger hidden" id="image_crop_cancel">#}
-{#                        <i class="fa fa-ban"></i>&nbsp;#}
-{#                        {% trans %}Cancel{% endtrans %}#}
-{#                    </span>#}
                 </div>
             </div>
         </div>
