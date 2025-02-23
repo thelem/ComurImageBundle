@@ -50,7 +50,7 @@ class CroppableImageType extends AbstractType
     //     return 'text';
     // }
 
-    public function getBlockPrefix()
+    public function getBlockPrefix(): string
     {
         return 'comur_image';
     }
@@ -58,7 +58,7 @@ class CroppableImageType extends AbstractType
     /**
      * {@inheritdoc}
      */
-    public function buildForm(FormBuilderInterface $builder, array $options)
+    public function buildForm(FormBuilderInterface $builder, array $options): void
     {
 
         // if($options['uploadConfig']['saveOriginal']){
@@ -134,7 +134,7 @@ class CroppableImageType extends AbstractType
     /**
      * {@inheritDoc}
      */
-    public function configureOptions(OptionsResolver $resolver)
+    public function configureOptions(OptionsResolver $resolver): void
     {
         $uploadConfig = self::$uploadConfig;
         $cropConfig = self::$cropConfig;
@@ -173,7 +173,7 @@ class CroppableImageType extends AbstractType
     /**
      * {@inheritdoc}
      */
-    public function buildView(FormView $view, FormInterface $form, array $options)
+    public function buildView(FormView $view, FormInterface $form, array $options): void
     {
         $originalPhotoFieldId = null;
 
